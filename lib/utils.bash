@@ -87,6 +87,7 @@ install_version() {
 	(
 		mkdir -p "$release_bin"
 		download_release "$version" "$release_tar"
+		echo "attempting to unzip $release_tar"
 		unzip -q "$release_tar" -d "$release_bin" || fail "Could not extract $release_file"
 		rm "$release_tar"
 		chmod +x "$release_file"
@@ -97,7 +98,8 @@ install_version() {
 
 		echo "$TOOL_NAME $version installation was successful!"
 	) || (
-		rm -rf "$install_path"
+		echo "failed at $install_path"
+		#rm -rf "$install_path"
 		fail "An error ocurred while installing $TOOL_NAME $version."
 	)
 }
