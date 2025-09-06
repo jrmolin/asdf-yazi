@@ -83,7 +83,7 @@ install_version() {
 
 	local release_bin="$install_path/bin"
 	local release_file="$release_bin/$TOOL_NAME"
-	local release_tar="$release_file.zip
+	local release_tar="$release_file.zip"
 	(
 		mkdir -p "$release_bin"
 		download_release "$version" "$release_tar"
