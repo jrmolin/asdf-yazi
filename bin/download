@@ -17,7 +17,10 @@ release_file="$ASDF_DOWNLOAD_PATH/$TOOL_NAME-$ASDF_INSTALL_VERSION.zip"
 download_release "$ASDF_INSTALL_VERSION" "$release_file"
 
 unzip_release $release_file "."
-mkdir bin
+if [ ! -d bin ] ; then
+	mkdir bin
+fi
+
 mv yazi bin
 mv ya bin
 

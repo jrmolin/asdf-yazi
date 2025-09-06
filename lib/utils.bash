@@ -81,7 +81,7 @@ install_version() {
 		fail "asdf-$TOOL_NAME supports release installs only"
 	fi
 
-	local release_bin="$install_path/bin"
+	local release_bin="$install_path"
 	local release_file="$release_bin/$TOOL_NAME"
 	local release_tar="$release_file.zip"
 	(
@@ -91,6 +91,12 @@ install_version() {
 		unzip_release $release_tar $release_bin
 		rm "$release_tar"
 		chmod +x "$release_file"
+
+		if [ ! -d "$release_bin/bin" ] ; then
+			mkdir -pv "$release_bin/bin"
+		fi
+
+		mv $TOOL_NAME "$release/bin"
 
 		local tool_cmd
 		tool_cmd="$(echo "$TOOL_TEST" | cut -d' ' -f1)"
@@ -112,7 +118,6 @@ unzip_release() {
 		temp=$(mktemp -d)
 		unzip -q -d "$temp" "$release_file"
 		mv "$temp"/*/* "$target"
-		mkdir -pv "$target/bin"
 		rm -rf "$temp"/* "$temp"
 	) || fail "Could not extract $release_file to $target"
 
