@@ -83,11 +83,11 @@ install_version() {
 
 	local release_bin="$install_path/bin"
 	local release_file="$release_bin/$TOOL_NAME"
-	local release_tar="$release_file.tar.gz"
+	local release_tar="$release_file.zip
 	(
 		mkdir -p "$release_bin"
 		download_release "$version" "$release_tar"
-		tar -xf "$release_tar" -C "$release_bin" || fail "Could not extract $release_file"
+		unzip -q "$release_tar" -d "$release_bin" || fail "Could not extract $release_file"
 		rm "$release_tar"
 		chmod +x "$release_file"
 
