@@ -49,13 +49,13 @@ download_release() {
 	kernel=$(uname -s | tr '[:upper:]' '[:lower:]')
 	case "${arch}-${kernel}" in
 	arm64-linux)
-		url="$GH_REPO/releases/download/v${version}/yazi-aarch64-unknown-linux-gnu.tar.gz"
+		url="$GH_REPO/releases/download/v${version}/yazi-aarch64-unknown-linux-gnu.zip"
 		;;
 	aarch64-linux)
-		url="$GH_REPO/releases/download/v${version}/yazi-aarch64-unknown-linux-gnu.tar.gz"
+		url="$GH_REPO/releases/download/v${version}/yazi-aarch64-unknown-linux-gnu.zip"
 		;;
 	x86_64-linux)
-		url="$GH_REPO/releases/download/v${version}/yazi-x86_64-unknown-linux-gnu.tar.gz"
+		url="$GH_REPO/releases/download/v${version}/yazi-x86_64-unknown-linux-gnu.zip"
 		;;
 	arm64-darwin)
 		url="$GH_REPO_CBIN/releases/download/yazi-${version}/yazi-${version}-aarch64-apple-darwin.tar.gz"
