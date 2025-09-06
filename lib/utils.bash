@@ -88,7 +88,7 @@ install_version() {
 		mkdir -p "$release_bin"
 		download_release "$version" "$release_tar"
 		echo "attempting to unzip $release_tar"
-		unzip -q "$release_tar" -d "$release_bin" || fail "Could not extract $release_file"
+		unzip_release $release_tar $release_bin
 		rm "$release_tar"
 		chmod +x "$release_file"
 
@@ -102,4 +102,17 @@ install_version() {
 		rm -rf "$install_path"
 		fail "An error ocurred while installing $TOOL_NAME $version."
 	)
+}
+
+unzip_release() {
+	local release_file="$1"
+	local target="$2"
+	#  Extract contents of zip file into the download directory
+	(
+		temp=$(mktemp -d)
+		unzip -q -d "$temp" "$release_file"
+		mv "$temp"/*/* "$target"
+		rmdir "$temp"/* "$temp"
+	) || fail "Could not extract $release_file to $target"
+
 }
