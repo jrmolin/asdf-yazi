@@ -81,7 +81,7 @@ install_version() {
 		fail "asdf-$TOOL_NAME supports release installs only"
 	fi
 
-	local release_bin="$install_path/bin"
+	local release_bin="$install_path"
 	local release_file="$release_bin/$TOOL_NAME"
 	local release_tar="$release_file.zip"
 	(
