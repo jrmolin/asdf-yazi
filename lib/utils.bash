@@ -112,7 +112,7 @@ unzip_release() {
 		temp=$(mktemp -d)
 		unzip -q -d "$temp" "$release_file"
 		mv "$temp"/*/* "$target"
-		rmdir "$temp"/* "$temp"
+		rm -rf "$temp"/* "$temp"
 	) || fail "Could not extract $release_file to $target"
 
 }
