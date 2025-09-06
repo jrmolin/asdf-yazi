@@ -3,9 +3,10 @@
 set -euo pipefail
 
 # TODO: Ensure this is the correct GitHub homepage where releases can be downloaded for yazi.
-GH_REPO="https://github.com/jrmolin/asdf-yazi"
+GH_REPO="https://github.com/sxyazi/yazi"
+GH_REPO_CBIN="https://github.com/cargo-bins/cargo-quickinstall"
 TOOL_NAME="yazi"
-TOOL_TEST="yazi --help"
+TOOL_TEST="yazi --version"
 
 fail() {
 	echo -e "asdf-$TOOL_NAME: $*"
@@ -41,8 +42,30 @@ download_release() {
 	version="$1"
 	filename="$2"
 
-	# TODO: Adapt the release URL convention for yazi
-	url="$GH_REPO/archive/v${version}.tar.gz"
+	local arch
+	arch=$(uname -m | tr '[:upper:]' '[:lower:]')
+	local kernel
+	kernel=$(uname -s | tr '[:upper:]' '[:lower:]')
+	case "${arch}-${kernel}" in
+	arm64-linux)
+		url="$GH_REPO/releases/download/v${version}/yazi-aarch64-unknown-linux-gnu.tar.gz"
+		;;
+	aarch64-linux)
+		url="$GH_REPO/releases/download/v${version}/yazi-aarch64-unknown-linux-gnu.tar.gz"
+		;;
+	x86_64-linux)
+		url="$GH_REPO/releases/download/v${version}/yazi-x86_64-unknown-linux-gnu.tar.gz"
+		;;
+	arm64-darwin)
+		url="$GH_REPO_CBIN/releases/download/yazi-${version}/yazi-${version}-aarch64-apple-darwin.tar.gz"
+		;;
+	x86_64-darwin)
+		url="$GH_REPO_CBIN/releases/download/yazi-${version}/yazi-${version}-x86_64-apple-darwin.tar.gz"
+		;;
+	*)
+		fail "Could not determine release URL"
+		;;
+	esac
 
 	echo "* Downloading $TOOL_NAME release $version..."
 	curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
@@ -51,24 +74,29 @@ download_release() {
 install_version() {
 	local install_type="$1"
 	local version="$2"
-	local install_path="${3%/bin}/bin"
+	local install_path="$3"
 
 	if [ "$install_type" != "version" ]; then
 		fail "asdf-$TOOL_NAME supports release installs only"
 	fi
 
+	local release_bin="$install_path/bin"
+	local release_file="$release_bin/$TOOL_NAME"
+	local release_tar="$release_file.tar.gz"
 	(
-		mkdir -p "$install_path"
-		cp -r "$ASDF_DOWNLOAD_PATH"/* "$install_path"
+		mkdir -p "$release_bin"
+		download_release "$version" "$release_tar"
+		tar -xf "$release_tar" -C "$release_bin" || fail "Could not extract $release_file"
+		rm "$release_tar"
+		chmod +x "$release_file"
 
-		# TODO: Assert yazi executable exists.
 		local tool_cmd
 		tool_cmd="$(echo "$TOOL_TEST" | cut -d' ' -f1)"
-		test -x "$install_path/$tool_cmd" || fail "Expected $install_path/$tool_cmd to be executable."
+		test -x "$install_path/bin/$tool_cmd" || fail "Expected $install_path/bin/$tool_cmd to be executable."
 
 		echo "$TOOL_NAME $version installation was successful!"
 	) || (
 		rm -rf "$install_path"
-		fail "An error occurred while installing $TOOL_NAME $version."
+		fail "An error ocurred while installing $TOOL_NAME $version."
 	)
 }
