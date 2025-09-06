@@ -19,7 +19,7 @@ download_release "$ASDF_INSTALL_VERSION" "$release_file"
 #  Extract contents of zip file into the download directory
 (
 	temp=$(mktemp -d)
-	unzip -d "$temp" "$release_file"
+	unzip -q -d "$temp" "$release_file"
 	mv "$temp"/*/* .
 	rmdir "$temp"/* "$temp"
 ) || fail "Could not extract $release_file"
