@@ -96,7 +96,7 @@ install_version() {
 			mkdir -pv "$release_bin/bin"
 		fi
 
-		mv $TOOL_NAME "$release/bin"
+		mv $release_bin/$TOOL_NAME "$release_bin/bin"
 
 		local tool_cmd
 		tool_cmd="$(echo "$TOOL_TEST" | cut -d' ' -f1)"
